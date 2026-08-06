@@ -21,7 +21,8 @@ export default function Home() {
     setUrl(inputUrl);
 
     try {
-      const res = await fetch("http://localhost:8000/api/jobs/", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiUrl}/api/jobs/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: inputUrl }),
@@ -45,7 +46,8 @@ export default function Home() {
     if (!jobId) return;
     if (status === "COMPLETED" || status === "FAILED") return;
 
-    const eventSource = new EventSource(`http://localhost:8000/api/jobs/${jobId}/stream`);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const eventSource = new EventSource(`${apiUrl}/api/jobs/${jobId}/stream`);
 
     eventSource.addEventListener("update", (e) => {
       try {

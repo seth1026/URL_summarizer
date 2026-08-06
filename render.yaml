@@ -31,6 +31,20 @@ services:
       - key: GROQ_API_KEY
         sync: false
 
+  - type: web
+    name: url-summarizer-frontend
+    env: node
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: url-summarizer-api
+          envVarKey: RENDER_EXTERNAL_URL
+
 databases:
   - name: url-summarizer-db
     plan: free
