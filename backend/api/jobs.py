@@ -15,11 +15,16 @@ router = APIRouter()
 def get_redis_opts():
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     parsed = urlparse(redis_url)
-    return {
+    opts = {
         "host": parsed.hostname or "localhost",
         "port": parsed.port or 6379,
         "db": int(parsed.path.lstrip('/')) if parsed.path and parsed.path != '/' else 0
     }
+    if parsed.password:
+        opts["password"] = parsed.password
+    if parsed.scheme == "rediss":
+        opts["ssl"] = True
+    return opts
 
 # Initialize BullMQ queue
 summarize_queue = Queue("summarize_queue", {"connection": get_redis_opts()})

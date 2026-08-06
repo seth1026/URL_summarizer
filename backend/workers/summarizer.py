@@ -16,11 +16,16 @@ from services.llm import summarize_text
 def get_redis_opts():
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     parsed = urlparse(redis_url)
-    return {
+    opts = {
         "host": parsed.hostname or "localhost",
         "port": parsed.port or 6379,
         "db": int(parsed.path.lstrip('/')) if parsed.path and parsed.path != '/' else 0
     }
+    if parsed.password:
+        opts["password"] = parsed.password
+    if parsed.scheme == "rediss":
+        opts["ssl"] = True
+    return opts
 
 async def process_job(bull_job: BullJob, job_token: str):
     data = bull_job.data
