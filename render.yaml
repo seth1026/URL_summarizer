@@ -4,7 +4,7 @@ services:
     env: docker
     rootDir: backend
     plan: free
-    dockerCommand: bash start.sh
+    dockerCommand: python start.py
     envVars:
       - key: DATABASE_URL
         fromDatabase:
