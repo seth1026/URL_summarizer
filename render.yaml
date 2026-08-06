@@ -4,23 +4,7 @@ services:
     env: docker
     rootDir: backend
     plan: free
-    dockerCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: url-summarizer-db
-          property: connectionString
-      - key: REDIS_URL
-        sync: false
-      - key: GROQ_API_KEY
-        sync: false
-
-  - type: worker
-    name: url-summarizer-worker
-    env: docker
-    rootDir: backend
-    plan: free
-    dockerCommand: python -m workers.summarizer
+    dockerCommand: sh -c "python -m workers.summarizer & uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
