@@ -1,7 +1,5 @@
 # 🚀 URL Summarizer (Powered by AI)
 
-![URL Summarizer Preview](frontend/public/window.svg) <!-- Replace with an actual screenshot when you take one! -->
-
 **[🔴 Live Demo](https://url-summarizer-frontend-7vv3.onrender.com/)**
 
 An asynchronous, full-stack AI web application that instantly extracts and summarizes content from any URL or PDF link. Built with a beautiful, dynamic UI and a robust queue-based backend architecture to handle long-running LLM inferences without timing out.
