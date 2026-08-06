@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: url-summarizer-api
+    env: docker
+    rootDir: backend
+    plan: free
+    dockerCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: url-summarizer-db
+          property: connectionString
+      - key: REDIS_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+  - type: worker
+    name: url-summarizer-worker
+    env: docker
+    rootDir: backend
+    plan: free
+    dockerCommand: python -m workers.summarizer
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: url-summarizer-db
+          property: connectionString
+      - key: REDIS_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+databases:
+  - name: url-summarizer-db
+    plan: free
+    databaseName: url_summarizer
+    user: render_user
