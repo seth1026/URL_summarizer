@@ -5,11 +5,16 @@ async def summarize_text(text: str) -> str:
     """
     Summarize text using Groq API.
     """
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key or api_key == "your_groq_api_key_here":
-        return "Warning: Groq API key not configured. Mock summary generated: \n\n" + text[:500] + "..."
+    def get_groq_client():
+        api_key = os.getenv("GROQ_API_KEY")
+        if not api_key or api_key == "your_groq_api_key_here":
+            raise ValueError("GROQ_API_KEY environment variable is missing or invalid!")
+        return AsyncGroq(api_key=api_key)
 
-    client = AsyncGroq(api_key=api_key)
+    try:
+        client = get_groq_client()
+    except Exception as e:
+        return f"Warning: {str(e)} Mock summary generated: \n\n" + text[:500] + "..."
     
     # Truncate text if it's too long to prevent context overflow
     # A simple truncation for MVP
