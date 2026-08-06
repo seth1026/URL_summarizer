@@ -4,7 +4,7 @@ services:
     env: docker
     rootDir: backend
     plan: free
-    dockerCommand: sh -c "python -m workers.summarizer & uvicorn main:app --host 0.0.0.0 --port $PORT"
+    dockerCommand: bash start.sh
     envVars:
       - key: DATABASE_URL
         fromDatabase:
